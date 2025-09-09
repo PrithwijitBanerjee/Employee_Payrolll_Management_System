@@ -14,7 +14,7 @@ router.get("/get-role/:id", roleController.getById);
 router.put("/update-role/:id", roleController.update);
 router.delete("/delete-role/:id", roleController.delete);
 
-const authController = require('../../controllers/authController');
-router.get("/get-user", authController.getAllUsers);
+const userController = require('../../controllers/user.controller');
+router.get("/get-user", userController.getAllUsers);
 
 module.exports = router;
