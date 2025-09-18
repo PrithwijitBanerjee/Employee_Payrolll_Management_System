@@ -20,6 +20,7 @@
     "http-errors": "~1.6.3",
     "id-auto-increment": "^1.0.1",
     "jade": "~1.11.0",
+    "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "mongoose": "^8.3.1",
