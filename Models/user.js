@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const bcrypt = require('bcrypt');
+const role = require('./role');
 
 const User = sequelize.define('User', {
   name: {
@@ -26,7 +27,7 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references : {
-      model : "Roles",
+      model : role,
       key : "id"
     }
   },
@@ -48,5 +49,11 @@ const User = sequelize.define('User', {
     }
   },
 });
+
+User.belongsTo(role, {
+  foreignKey : "role",
+  targetKey : "id",
+  as : "roleName"
+})
 
 module.exports = User;

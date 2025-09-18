@@ -24,4 +24,11 @@ router.get('/get-projectHelp/:code', projHelpController.getProjHelpByCode);
 router.put('/update-projectHelp/:code', projHelpController.updateProjHelp);
 router.delete('/delete-projectHelp/:code', projHelpController.deleteProjHelp);
 
+const departmentController = require('../../controllers/department.controller');
+router.post('/create-department', departmentController.createDepartment);
+router.get('/get-departments', departmentController.getAllDepartments);
+router.get('/get-department/:DeptCode', departmentController.getDepartmentByCode);
+router.put('/update-department/:DeptCode', departmentController.updateDepartment);
+router.delete('/delete-department/:DeptCode', departmentController.deleteDepartment);
+
 module.exports = router;
