@@ -11,6 +11,9 @@ const authController = require('../../controllers/authController');
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
+const roleController = require("../../controllers/roleController");
+router.get("/get-role", roleController.getAll);
+
 
 router.use(middleware); 
 

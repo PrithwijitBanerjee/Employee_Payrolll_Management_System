@@ -31,4 +31,18 @@ router.get('/get-department/:DeptCode', departmentController.getDepartmentByCode
 router.put('/update-department/:DeptCode', departmentController.updateDepartment);
 router.delete('/delete-department/:DeptCode', departmentController.deleteDepartment);
 
+const DesignationController = require("../../controllers/designation.controller");
+router.post("/create-designation", DesignationController.createDesignation);
+router.get("/get-designations", DesignationController.getAllDesignations);
+router.get("/get-designation/:code", DesignationController.getDesignationByCode);
+router.put("/update-designation/:code", DesignationController.updateDesignation);
+router.delete("/delete-designation/:code", DesignationController.deleteDesignation);
+
+const EmployeeController = require("../../controllers/employee.controller");
+router.post("/create-employee", EmployeeController.create);
+router.get("/get-employes", EmployeeController.getAll);
+router.get("/get-employee/:emplCode", EmployeeController.getById);
+router.put("/update-employee/:emplCode", EmployeeController.update);
+router.delete("/delete-employee/:emplCode", EmployeeController.remove);
+
 module.exports = router;

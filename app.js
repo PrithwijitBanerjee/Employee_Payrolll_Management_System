@@ -12,13 +12,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var app = express();
-
-// console.log("Mongo URI:", process.env.MONGO_URI);
-
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log("MongoDB is Connected".cyan.underline))
-//   .catch((error) => console.log(`Error: ${error.message}`.red.underline.bold));
+var app = express()
 
 const sequelize = require('./config/db');
 
