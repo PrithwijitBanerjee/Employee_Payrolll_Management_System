@@ -1,4 +1,4 @@
-const User  = require('../Models/user');
+const User = require('../Models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -14,9 +14,7 @@ exports.registerUser = async ({ name, email, password, role }) => {
         throw { status: 409, message: 'Email already in use' };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({ name, email, password: hashedPassword, role });
+     const user = await User.create({ name, email, password, role });
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
         expiresIn: '1d',
@@ -34,16 +32,19 @@ exports.loginUser = async ({ email, password }) => {
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-        throw { status: 401, message: 'Invalid email or password' };
+        throw { status: 401, message: 'Invalid email' };
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    // console.log("isMatch: ", isMatch);
+    // Correct way to access the password - use get() method or direct property access
+    const hashedPassword = user.get('password');
+    console.log("hashedPassword: ", hashedPassword);
     console.log("password: ", password);
     
-    
+
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+
     if (!isMatch) {
-        throw { status: 401, message: 'Invalid email or password' };
+        throw { status: 401, message: 'Invalid password' };
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
