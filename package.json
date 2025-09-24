@@ -30,7 +30,6 @@
     "node-input-validator": "^4.5.1",
     "nodemon": "^3.1.0",
     "otp-generator": "^4.0.1",
-    "password-hash": "^1.2.2",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
