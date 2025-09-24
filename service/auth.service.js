@@ -1,4 +1,5 @@
-const User = require('../Models/user');
+const User  = require('../Models/user');
+const role  = require('../Models/role');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -30,7 +31,14 @@ exports.loginUser = async ({ email, password }) => {
         throw { status: 400, message: 'Email and password are required' };
     }
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email },
+    include : [
+        {
+            model : role,
+            as : "roleName",
+            attributes: ["id", "roleName"]
+        }
+    ] });
     if (!user) {
         throw { status: 401, message: 'Invalid email' };
     }
