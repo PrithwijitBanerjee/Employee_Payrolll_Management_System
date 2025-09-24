@@ -14,7 +14,7 @@ exports.registerUser = async ({ name, email, password, role }) => {
         throw { status: 409, message: 'Email already in use' };
     }
 
-     const user = await User.create({ name, email, password, role });
+    const user = await User.create({ name, email, password, role });
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
         expiresIn: '1d',
