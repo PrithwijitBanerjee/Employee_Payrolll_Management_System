@@ -8,7 +8,6 @@ const { Sequelize } = require('sequelize');
 
 // Validation schema
 const projHelpSchema = Joi.object({
-  code: Joi.string().length(3).required(),
   data: Joi.string().max(50).required(),
   tag: Joi.string().length(2).required(),
 });
@@ -21,11 +20,6 @@ exports.createProjHelp = async (req, res) => {
   }
 
   try {
-    const existing = await projHelpService.findByCode(value.code);
-    if (existing) {
-      return errorResponse(res, 409, "Code already exists");
-    }
-
     const result = await projHelpService.create(value);
     return successResponse(res, "ProjHelp entry created successfully", result);
   } catch (err) {
