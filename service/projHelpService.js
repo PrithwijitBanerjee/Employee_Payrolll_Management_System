@@ -1,11 +1,13 @@
 const ProjHelp = require('../Models/projhelp');
+const { getNextCode } = require('../utils/codeGenerator');
 
 exports.findByCode = async (code) => {
   return await ProjHelp.findByPk(code);
 };
 
 exports.create = async (data) => {
-  return await ProjHelp.create(data);
+  const newCode = await getNextCode(ProjHelp, "code", 3);
+  return await ProjHelp.create({data : data.data, code : newCode, tag : data.tag});
 };
 
 exports.findAll = async () => {
