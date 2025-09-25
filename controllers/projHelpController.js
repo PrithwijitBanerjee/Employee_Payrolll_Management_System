@@ -95,3 +95,18 @@ exports.deleteProjHelp = async (req, res) => {
     return errorResponse(res, 500, "Internal Server Error", err.message);
   }
 };
+
+exports.getProjHelpByTag = async (req, res) => {
+  const { tag } = req.params;
+
+  try {
+    const entry = await projHelpService.findByTag(tag);
+    if (!entry) {
+      return errorResponse(res, 404, "ProjHelp entry not found");
+    }
+
+    return successResponse(res, "ProjHelp entry fetched successfully", entry);
+  } catch (err) {
+    return errorResponse(res, 500, "Internal Server Error", err.message);
+  }
+};
