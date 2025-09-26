@@ -4,6 +4,12 @@ const bcrypt = require('bcrypt');
 const role = require('./role');
 
 const User = sequelize.define('User', {
+  code : {
+    type : DataTypes.CHAR(5),
+    allowNull : false,
+    primaryKey : true,
+    unique : true
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -24,11 +30,11 @@ const User = sequelize.define('User', {
   },
 
   role: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.CHAR(3),
     allowNull: false,
     references : {
       model : role,
-      key : "id"
+      key : "code"
     }
   },
 }, {
@@ -52,7 +58,7 @@ const User = sequelize.define('User', {
 
 User.belongsTo(role, {
   foreignKey : "role",
-  targetKey : "id",
+  targetKey : "code",
   as : "roleName"
 })
 

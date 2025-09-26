@@ -18,7 +18,7 @@ const ProjHelp = sequelize.define('ProjHelp', {
   }
 }, {
   tableName: 'projhelp',
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = ProjHelp;

@@ -1,13 +1,16 @@
 const { Op } = require("sequelize");
 const Role = require("../Models/role");
+const { getNextCode } = require("../utils/codeGenerator");
 
 exports.createRole = async (roleName) => {
     if (!roleName) throw { status: 400, message: "Role is invalid!" };
 
+    const newCode = await getNextCode(Role, "code", 3);
+
     const existData = await Role.findOne({ where: { roleName } });
     if (existData) throw { status: 400, message: "This role already exists!" };
 
-    return await Role.create({ roleName });
+    return await Role.create({ code : newCode, roleName });
 };
 
 exports.getAllRoles = async () => {
