@@ -2,6 +2,7 @@ const User  = require('../Models/user');
 const role  = require('../Models/role');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { getNextCode } = require("../utils/codeGenerator");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -15,7 +16,8 @@ exports.registerUser = async ({ name, email, password, role }) => {
         throw { status: 409, message: 'Email already in use' };
     }
 
-    const user = await User.create({ name, email, password, role });
+    const code = await getNextCode(User, 'code', 5)
+    const user = await User.create({ code, name, email, password, role });
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
         expiresIn: '1d',

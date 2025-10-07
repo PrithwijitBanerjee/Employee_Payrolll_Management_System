@@ -14,6 +14,9 @@ router.post('/login', authController.login);
 const roleController = require("../../controllers/roleController");
 router.get("/get-role", roleController.getAll);
 
+const projHelpController = require('../../controllers/projHelpController');
+router.get('/get-projectHelp-tag/:tag', projHelpController.getProjHelpByTag);
+
 
 router.use(middleware); 
 

@@ -6,7 +6,7 @@ exports.getAllUsers = async () => {
         include: {
             model: Role,
             as : "roleName",
-            attributes: ['id', 'roleName'],
+            attributes: ['code', 'roleName'],
         },
         attributes: { exclude: ['password'] },
     });

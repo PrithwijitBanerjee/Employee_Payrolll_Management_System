@@ -26,3 +26,7 @@ exports.delete = async (code) => {
   await entry.destroy();
   return entry;
 };
+
+exports.findByTag = async (tag) => {
+  return await ProjHelp.findAll({where : {tag}});
+};

@@ -45,4 +45,11 @@ router.get("/get-employee/:emplCode", EmployeeController.getById);
 router.put("/update-employee/:emplCode", EmployeeController.update);
 router.delete("/delete-employee/:emplCode", EmployeeController.remove);
 
+const ClientController = require("../../controllers/clientController");
+router.post("/create-client", ClientController.createClient);
+router.get("/get-client", ClientController.getAllClients);
+router.get("/get-client/:clientCode", ClientController.getClientByCode);
+router.put("/update-client/:clientCode", ClientController.updateClient);
+router.delete("/delete-client/:clientCode", ClientController.deleteClient);
+
 module.exports = router;
