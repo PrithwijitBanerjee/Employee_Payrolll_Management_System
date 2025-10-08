@@ -38,7 +38,7 @@ exports.loginUser = async ({ email, password }) => {
         {
             model : role,
             as : "roleName",
-            attributes: ["id", "roleName"]
+            attributes: ["code", "roleName"]
         }
     ] });
     if (!user) {
