@@ -21,4 +21,22 @@ const role = sequelize.define(
   }
 );
 
+const initRoles = async () => {
+  const defaultRoles = [
+    { code: "001", roleName: "Admin" },
+    { code: "002", roleName: "Employee" }
+  ];
+
+  for (const role of defaultRoles) {
+    const [record, created] = await Role.findOrCreate({
+      where: { code: role.code },
+      defaults: { roleName: role.roleName }
+    });
+
+    if (created) {
+      console.log(`✅ Role '${role.roleName}' added.`);
+    }
+  }
+};
+
 module.exports = role;

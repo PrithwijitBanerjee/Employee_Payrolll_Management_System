@@ -1,12 +1,19 @@
 const EmployeeService = require("../service/employee.service");
+const AuthService = require("../service/auth.service");
 const { successResponse, errorResponse } = require("../utils/response");
 
 async function create(req, res) {
   try {
     const employee = await EmployeeService.createEmployee(req.body);
+    const data = await AuthService.registerUser({
+      name: req.body.EmplName,
+      email: req.body.Email,
+      password: req.body.Password,
+      role: "002",
+    });
     return successResponse(res, "Employee created successfully", employee);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return errorResponse(res, 400, error.message);
   }
 }
@@ -33,8 +40,15 @@ async function getById(req, res) {
 async function update(req, res) {
   try {
     const { emplCode } = req.params;
-    const updatedEmployee = await EmployeeService.updateEmployee(emplCode, req.body);
-    return successResponse(res, "Employee updated successfully", updatedEmployee);
+    const updatedEmployee = await EmployeeService.updateEmployee(
+      emplCode,
+      req.body
+    );
+    return successResponse(
+      res,
+      "Employee updated successfully",
+      updatedEmployee
+    );
   } catch (error) {
     return errorResponse(res, 400, error.message);
   }

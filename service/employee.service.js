@@ -3,7 +3,7 @@ const ProjHelp = require("../Models/projhelp");
 const Department = require("../Models/department.model");
 const Designation = require("../Models/Designation");
 const { getNextCode } = require("../utils/codeGenerator");
-const Employee = require("../Models/employee")
+const Employee = require("../Models/employee");
 
 async function createEmployee(data) {
   const requiredFields = [
@@ -15,6 +15,7 @@ async function createEmployee(data) {
     "UserID",
     "Password",
     "EmplStatus",
+    "Email",
   ];
 
   for (const field of requiredFields) {
@@ -25,11 +26,20 @@ async function createEmployee(data) {
 
   data.EmplCode = await getNextCode(Employee, "EmplCode", 5);
 
-  const existingTag = await Employee.findOne({ where: { EmplTag: data.EmplTag } });
+  const existingTag = await Employee.findOne({
+    where: { EmplTag: data.EmplTag },
+  });
   if (existingTag) throw new Error("EmplTag must be unique");
 
-  const existingUser = await Employee.findOne({ where: { UserID: data.UserID } });
+  const existingUser = await Employee.findOne({
+    where: { UserID: data.UserID },
+  });
   if (existingUser) throw new Error("UserID must be unique");
+
+  const existingEmail = await Employee.findOne({
+    where: { Email: data.Email },
+  });
+  if (existingEmail) throw new Error("Email must be unique");
 
   const employee = await Employee.create(data);
   return employee;
@@ -64,14 +74,23 @@ async function updateEmployee(emplCode, data) {
   if (!employee) throw new Error("Employee not found");
 
   if (data.EmplTag && data.EmplTag !== employee.EmplTag) {
-    const existingTag = await Employee.findOne({ where: { EmplTag: data.EmplTag } });
+    const existingTag = await Employee.findOne({
+      where: { EmplTag: data.EmplTag },
+    });
     if (existingTag) throw new Error("EmplTag must be unique");
   }
 
   if (data.UserID && data.UserID !== employee.UserID) {
-    const existingUser = await Employee.findOne({ where: { UserID: data.UserID } });
+    const existingUser = await Employee.findOne({
+      where: { UserID: data.UserID },
+    });
     if (existingUser) throw new Error("UserID must be unique");
   }
+
+  const existingEmail = await Employee.findOne({
+    where: { Email: data.Email },
+  });
+  if (existingEmail) throw new Error("Email must be unique");
 
   if (data.Password) {
     const salt = await bcrypt.genSalt(10);

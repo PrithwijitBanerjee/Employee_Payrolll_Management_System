@@ -12,6 +12,9 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const Role = require('./Models/role');
+const { initRoles } = require('./Seeders/initDefaultData');
+
 var app = express()
 
 const sequelize = require('./config/db');
@@ -21,6 +24,7 @@ const sequelize = require('./config/db');
     await sequelize.authenticate();
     console.log('✅ Database connection has been established successfully.');
     await sequelize.sync({ alter: true });
+    await initRoles(Role);
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
