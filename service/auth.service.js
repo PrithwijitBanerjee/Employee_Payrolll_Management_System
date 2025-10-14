@@ -57,7 +57,7 @@ exports.loginUser = async ({ email, password }) => {
         throw { status: 401, message: 'Invalid password' };
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role, code : user.code }, JWT_SECRET, {
         expiresIn: '1d',
     });
 

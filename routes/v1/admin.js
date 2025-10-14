@@ -52,4 +52,18 @@ router.get("/get-client/:clientCode", ClientController.getClientByCode);
 router.put("/update-client/:clientCode", ClientController.updateClient);
 router.delete("/delete-client/:clientCode", ClientController.deleteClient);
 
+const projectController = require('../../controllers/projectController');
+router.post('/create-project', projectController.create);
+router.get('/get-projects', projectController.getAll);
+router.get('/get-project/:code', projectController.getByCode);
+router.put('/update-project/:code', projectController.update);
+router.delete('/delete-project/:code', projectController.remove);
+
+const jobmastController = require('../../controllers/jobmast.controller');
+router.post('/create-jobmast', jobmastController.createJob);
+router.get('/get-jobmasts', jobmastController.getAllJobs);
+router.get('/get-jobmast/:id', jobmastController.getJobById);
+router.put('/update-jobmast/:id', jobmastController.updateJob);
+router.delete('/delete-jobmast/:id', jobmastController.deleteJob);
+
 module.exports = router;
