@@ -26,7 +26,7 @@ const Designation = sequelize.define(
   },
   {
     tableName: "designation",
-    timestamps: false,
+    timestamps: true,
   }
 );
 
