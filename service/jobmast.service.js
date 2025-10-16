@@ -38,6 +38,8 @@ exports.createJob = async (data, logData) => {
   const status = await ProjHelp.findByPk(data.JobStatus);
   if (!status) throw new Error(`JobStatus '${data.JobStatus}' is invalid.`);
 
+  const fromData = await Employee.findOne({where : {Email : logData.email}});
+
   const basic = parseFloat(data.BasicAmount || 0);
   const discount = parseFloat(data.DiscAmount || 0);
   const gross = basic - discount;
@@ -47,7 +49,7 @@ exports.createJob = async (data, logData) => {
   const job = await JobMast.create({
     JobNo: jobNo,
     JobDate: data.JobDate || new Date(),
-    JobFrom: logData.code,
+    JobFrom: fromData.EmplCode,
     JobTo: data.JobTo,
     BasicAmount: basic,
     DiscAmount: discount,

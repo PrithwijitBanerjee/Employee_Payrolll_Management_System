@@ -4,6 +4,7 @@ const Department = require("../Models/department.model");
 const Designation = require("../Models/Designation");
 const { getNextCode } = require("../utils/codeGenerator");
 const Employee = require("../Models/employee");
+const User = require("../Models/user");
 
 async function createEmployee(data) {
   const requiredFields = [
@@ -105,7 +106,10 @@ async function deleteEmployee(emplCode) {
   const employee = await Employee.findByPk(emplCode);
   if (!employee) throw new Error("Employee not found");
 
+  const userData = await User.findOne({where : {email : employee.Email}})
+
   await employee.destroy();
+  await userData.destroy();
   return true;
 }
 

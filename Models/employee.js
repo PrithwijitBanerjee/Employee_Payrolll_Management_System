@@ -80,7 +80,7 @@ const Employee = sequelize.define(
   },
   {
     tableName: "employee",
-    timestamps: false,
+    timestamps: true,
   }
 );
 
