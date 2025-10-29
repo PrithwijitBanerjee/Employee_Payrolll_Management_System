@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const bcrypt = require("bcrypt");
 const ProjHelp = require("./projhelp");
-const Department = require("./department.model");
+const Department = require("./department");
 const Designation = require("./Designation");
 
 const Employee = sequelize.define(
