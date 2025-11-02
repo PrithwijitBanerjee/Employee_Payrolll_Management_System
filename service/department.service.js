@@ -1,4 +1,4 @@
-const Department = require("../Models/department.model");
+const Department = require("../Models/department");
 const ProjHelp = require("../Models/projhelp");
 const { Op } = require("sequelize");
 

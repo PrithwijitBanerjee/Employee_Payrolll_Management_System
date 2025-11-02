@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const ProjHelp = require("../Models/projhelp");
-const Department = require("../Models/department.model");
+const Department = require("../Models/department");
 const Designation = require("../Models/Designation");
 const { getNextCode } = require("../utils/codeGenerator");
 const Employee = require("../Models/employee");
