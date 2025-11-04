@@ -7,7 +7,7 @@ var upload = multer({ storage: storage });
 
 ///////////////////////////////////////  epin ///////////////////////////////////////////////////
 
-const roleController = require("../../controllers/roleController");
+const roleController = require("../../controllers/role.controller");
 router.post("/create-role", roleController.create);
 router.get("/get-role", roleController.getAll);
 router.get("/get-role/:id", roleController.getById);
@@ -17,7 +17,7 @@ router.delete("/delete-role/:id", roleController.delete);
 const userController = require('../../controllers/user.controller');
 router.get("/get-user", userController.getAllUsers);
 
-const projHelpController = require('../../controllers/projHelpController');
+const projHelpController = require('../../controllers/projHelp.controller');
 router.post('/create-projectHelp', projHelpController.createProjHelp);
 router.get('/getAll-projectHelp', projHelpController.getAllProjHelp);
 router.get('/get-projectHelp/:code', projHelpController.getProjHelpByCode);
@@ -45,14 +45,14 @@ router.get("/get-employee/:emplCode", EmployeeController.getById);
 router.put("/update-employee/:emplCode", EmployeeController.update);
 router.delete("/delete-employee/:emplCode", EmployeeController.remove);
 
-const ClientController = require("../../controllers/clientController");
+const ClientController = require("../../controllers/client.controller");
 router.post("/create-client", ClientController.createClient);
 router.get("/get-client", ClientController.getAllClients);
 router.get("/get-client/:clientCode", ClientController.getClientByCode);
 router.put("/update-client/:clientCode", ClientController.updateClient);
 router.delete("/delete-client/:clientCode", ClientController.deleteClient);
 
-const projectController = require('../../controllers/projectController');
+const projectController = require('../../controllers/project.controller');
 router.post('/create-project', projectController.create);
 router.get('/get-projects', projectController.getAll);
 router.get('/get-project/:code', projectController.getByCode);

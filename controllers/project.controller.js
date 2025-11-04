@@ -1,4 +1,4 @@
-const projectService = require('../service/projectService');
+const projectService = require('../service/project.service');
 const { successResponse, errorResponse } = require('../utils/response');
 
 module.exports = {
