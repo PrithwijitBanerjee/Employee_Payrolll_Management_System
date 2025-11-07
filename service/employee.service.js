@@ -5,6 +5,7 @@ const Designation = require("../Models/Designation");
 const { getNextCode } = require("../utils/codeGenerator");
 const Employee = require("../Models/employee");
 const User = require("../Models/user");
+const { Op } = require("sequelize");
 
 async function createEmployee(data) {
   const requiredFields = [
@@ -74,28 +75,38 @@ async function updateEmployee(emplCode, data) {
   const employee = await Employee.findByPk(emplCode);
   if (!employee) throw new Error("Employee not found");
 
+  if (data.Password) {
+    delete data.Password;
+  }
+
   if (data.EmplTag && data.EmplTag !== employee.EmplTag) {
     const existingTag = await Employee.findOne({
-      where: { EmplTag: data.EmplTag },
+      where: {
+        EmplTag: data.EmplTag,
+        EmplCode: { [Op.ne]: emplCode }
+      },
     });
     if (existingTag) throw new Error("EmplTag must be unique");
   }
 
   if (data.UserID && data.UserID !== employee.UserID) {
     const existingUser = await Employee.findOne({
-      where: { UserID: data.UserID },
+      where: {
+        UserID: data.UserID,
+        EmplCode: { [Op.ne]: emplCode }
+      },
     });
     if (existingUser) throw new Error("UserID must be unique");
   }
 
-  const existingEmail = await Employee.findOne({
-    where: { Email: data.Email },
-  });
-  if (existingEmail) throw new Error("Email must be unique");
-
-  if (data.Password) {
-    const salt = await bcrypt.genSalt(10);
-    data.Password = await bcrypt.hash(data.Password, salt);
+  if (data.Email && data.Email !== employee.Email) {
+    const existingEmail = await Employee.findOne({
+      where: {
+        Email: data.Email,
+        EmplCode: { [Op.ne]: emplCode }
+      },
+    });
+    if (existingEmail) throw new Error("Email must be unique");
   }
 
   await employee.update(data);

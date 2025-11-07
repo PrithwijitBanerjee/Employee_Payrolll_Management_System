@@ -1,5 +1,7 @@
 const JobDetl = require("../Models/JobDetl");
+const JobMastService = require("./jobmast.service");
 const Project = require("../Models/Project");
+const JobMast = require("../Models/JobMast");
 const { Op } = require("sequelize");
 
 const generateJobNo = async () => {
@@ -15,12 +17,7 @@ const generateJobNo = async () => {
 };
 
 const calculateAmounts = async (data) => {
-  let {
-    BasicAmount = 0,
-    DiscRate = 0,
-    DiscAmount = 0,
-    ProjectCode,
-  } = data;
+  let { BasicAmount = 0, DiscRate = 0, DiscAmount = 0, ProjectCode } = data;
 
   const project = await Project.findByPk(ProjectCode);
   if (!project) throw new Error("Invalid Project Code");
@@ -33,13 +30,11 @@ const calculateAmounts = async (data) => {
   else DiscAmount = (BasicAmount * DiscRate) / 100;
 
   const GrossAmount = BasicAmount - DiscAmount;
-
   const SGSTAmount = (GrossAmount * SGSTRate) / 100;
   const CGSTAmount = (GrossAmount * CGSTRate) / 100;
   const IGSTAmount = (GrossAmount * IGSTRate) / 100;
-
-  const NetAmount =
-    GrossAmount + SGSTAmount + CGSTAmount + IGSTAmount;
+  const TaxAmount = SGSTAmount + CGSTAmount + IGSTAmount;
+  const NetAmount = GrossAmount + TaxAmount;
 
   return {
     ...data,
@@ -51,16 +46,78 @@ const calculateAmounts = async (data) => {
     SGSTAmount,
     CGSTAmount,
     IGSTAmount,
+    TaxAmount,
     NetAmount,
   };
 };
 
-// Service Methods
+const updateJobMasterTotals = async (JobMasterNo) => {
+  const details = await JobDetl.findAll({ where: { JobMasterNo } });
+  if (!details.length) return;
+
+  const totals = details.reduce(
+    (acc, item) => {
+      acc.BasicAmount += parseFloat(item.BasicAmount || 0);
+      acc.DiscAmount += parseFloat(item.DiscAmount || 0);
+      acc.GrossAmount += parseFloat(item.GrossAmount || 0);
+      acc.TaxAmount +=
+        parseFloat(item.SGSTAmount || 0) +
+        parseFloat(item.CGSTAmount || 0) +
+        parseFloat(item.IGSTAmount || 0);
+      acc.NetAmount += parseFloat(item.NetAmount || 0);
+      return acc;
+    },
+    { BasicAmount: 0, DiscAmount: 0, GrossAmount: 0, TaxAmount: 0, NetAmount: 0 }
+  );
+
+  await JobMast.update(totals, { where: { JobNo: JobMasterNo } });
+};
+
 const JobDetlService = {
-  async createJob(data) {
+  async createJob(data, logData) {
     const JobNo = await generateJobNo();
     const calcData = await calculateAmounts(data);
-    return await JobDetl.create({ ...calcData, JobNo });
+
+    let { JobMasterNo } = data;
+
+    // 🔹 If no JobMasterNo → create new JobMast using your JobMast service
+    if (!JobMasterNo) {
+      const newJobMast = await JobMastService.createJob(
+        {
+          JobDate: new Date(),
+          JobTo: null,
+          JobStatus: data.JobStatus,
+          BasicAmount: 0,
+          DiscAmount: 0,
+          GrossAmount: 0,
+          TaxAmount: 0,
+          NetAmount: 0,
+        },
+        logData
+      );
+
+      JobMasterNo = newJobMast.JobNo;
+    }
+
+    // 🔹 Create JobDetl
+    const jobDetl = await JobDetl.create({ ...calcData, JobNo, JobMasterNo });
+
+    // 🔹 Update JobMast totals
+    await updateJobMasterTotals(JobMasterNo);
+
+    return jobDetl;
+  },
+
+  async updateJob(JobNo, data) {
+    const calcData = await calculateAmounts(data);
+    await JobDetl.update(calcData, { where: { JobNo } });
+
+    const job = await JobDetl.findOne({ where: { JobNo } });
+    if (job?.JobMasterNo) {
+      await updateJobMasterTotals(job.JobMasterNo);
+    }
+
+    return await this.getJobById(JobNo);
   },
 
   async getAllJobs() {
@@ -84,18 +141,15 @@ const JobDetlService = {
     });
   },
 
-  async updateJob(JobNo, data) {
-    const calcData = await calculateAmounts(data);
-    await JobDetl.update(calcData, {
-      where: { JobNo },
-    });
-    return await this.getJobById(JobNo);
-  },
-
   async deleteJob(JobNo) {
-    return await JobDetl.destroy({
-      where: { JobNo },
-    });
+    const job = await JobDetl.findOne({ where: { JobNo } });
+    const result = await JobDetl.destroy({ where: { JobNo } });
+
+    if (job?.JobMasterNo) {
+      await updateJobMasterTotals(job.JobMasterNo);
+    }
+
+    return result;
   },
 };
 

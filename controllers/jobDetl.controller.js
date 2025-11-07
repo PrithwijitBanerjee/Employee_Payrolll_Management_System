@@ -3,7 +3,8 @@ const JobDetlService = require("../service/jobDetl.service");
 const JobDetlController = {
   async create(req, res) {
     try {
-      const job = await JobDetlService.createJob(req.body);
+      const logedData = req.user;
+      const job = await JobDetlService.createJob(req.body, logedData);
       res.status(201).json({ success: true, data: job });
     } catch (err) {
       res.status(400).json({ success: false, message: err.message });

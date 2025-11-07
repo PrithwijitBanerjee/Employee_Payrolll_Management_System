@@ -32,8 +32,8 @@ const generateJobNo = async () => {
 exports.createJob = async (data, logData) => {
   const jobNo = await generateJobNo();
 
-  const toEmp = await Employee.findByPk(data.JobTo);
-  if (!toEmp) throw new Error(`JobTo employee '${data.JobTo}' not found.`);
+  // const toEmp = await Employee.findByPk(data.JobTo);
+  // if (!toEmp) throw new Error(`JobTo employee '${data.JobTo}' not found.`);
 
   const status = await ProjHelp.findByPk(data.JobStatus);
   if (!status) throw new Error(`JobStatus '${data.JobStatus}' is invalid.`);
@@ -49,8 +49,8 @@ exports.createJob = async (data, logData) => {
   const job = await JobMast.create({
     JobNo: jobNo,
     JobDate: data.JobDate || new Date(),
-    JobFrom: fromData.EmplCode,
-    JobTo: data.JobTo,
+    JobFrom: fromData.EmplCode || "",
+    JobTo: data.JobTo || "",
     BasicAmount: basic,
     DiscAmount: discount,
     GrossAmount: gross,

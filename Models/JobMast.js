@@ -24,7 +24,8 @@ const JobMast = sequelize.define('JobMast', {
   },
   JobTo: {
     type: DataTypes.STRING(5),
-    allowNull: false,
+    allowNull: true,
+    defaultValue: null,
     references: {
       model: Employee,
       key: 'EmplCode'
