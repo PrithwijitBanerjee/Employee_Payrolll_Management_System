@@ -68,6 +68,7 @@ router.delete('/delete-jobmast/:id', jobmastController.deleteJob);
 
 const JobDetlController = require("../../controllers/jobDetl.controller");
 router.post("/create-job", JobDetlController.create);
+router.post("/create-jobs", JobDetlController.createMultiple);
 router.get("/get-jobs", JobDetlController.getAll);
 router.get("/get-job/:JobNo", JobDetlController.getById);
 router.put("/update-job/:JobNo", JobDetlController.update);
