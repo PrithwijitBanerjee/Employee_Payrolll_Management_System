@@ -6,15 +6,15 @@ var usersRouter=require('./user')
 
 
 const middleware = require('../../middlewares/middleware');
-const authController = require('../../controllers/authController');
+const authController = require('../../controllers/auth.controller');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
-const roleController = require("../../controllers/roleController");
+const roleController = require("../../controllers/role.controller");
 router.get("/get-role", roleController.getAll);
 
-const projHelpController = require('../../controllers/projHelpController');
+const projHelpController = require('../../controllers/projHelp.controller');
 router.get('/get-projectHelp-tag/:tag', projHelpController.getProjHelpByTag);
 
 

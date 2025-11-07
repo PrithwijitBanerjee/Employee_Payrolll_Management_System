@@ -3,7 +3,7 @@ const {
   successResponse,
   errorResponse,
 } = require("../utils/response");
-const projHelpService = require("../service/projHelpService");
+const projHelpService = require("../service/projHelp.service");
 const { Sequelize } = require('sequelize');
 
 // Validation schema
