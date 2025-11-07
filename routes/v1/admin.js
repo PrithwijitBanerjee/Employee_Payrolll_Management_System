@@ -66,4 +66,11 @@ router.get('/get-jobmast/:id', jobmastController.getJobById);
 router.put('/update-jobmast/:id', jobmastController.updateJob);
 router.delete('/delete-jobmast/:id', jobmastController.deleteJob);
 
+const JobDetlController = require("../../controllers/jobDetl.controller");
+router.post("/create-job", JobDetlController.create);
+router.get("/get-jobs", JobDetlController.getAll);
+router.get("/get-job/:JobNo", JobDetlController.getById);
+router.put("/update-job/:JobNo", JobDetlController.update);
+router.delete("/delete-job/:JobNo", JobDetlController.delete);
+
 module.exports = router;
