@@ -11,6 +11,16 @@ const JobDetlController = {
     }
   },
 
+  async createMultiple(req, res) {
+    try {
+      const logedData = req.user;
+      const job = await JobDetlService.createJobs(req.body, logedData);
+      res.status(201).json({ success: true, data: job });
+    } catch (err) {
+      res.status(400).json({ success: false, message: err.message });
+    }
+  },
+
   async getAll(req, res) {
     try {
       const jobs = await JobDetlService.getAllJobs();
