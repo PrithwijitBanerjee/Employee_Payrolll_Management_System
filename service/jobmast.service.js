@@ -50,7 +50,7 @@ exports.createJob = async (data, logData) => {
     JobNo: jobNo,
     JobDate: data.JobDate || new Date(),
     JobFrom: fromData.EmplCode || "",
-    JobTo: data.JobTo || "",
+    JobTo: data.JobTo || null,
     BasicAmount: basic,
     DiscAmount: discount,
     GrossAmount: gross,

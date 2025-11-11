@@ -8,7 +8,6 @@ var usersRouter=require('./user')
 const middleware = require('../../middlewares/middleware');
 const authController = require('../../controllers/auth.controller');
 
-router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 const roleController = require("../../controllers/role.controller");

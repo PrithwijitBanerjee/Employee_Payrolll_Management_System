@@ -5,12 +5,6 @@ const { successResponse, errorResponse } = require("../utils/response");
 async function create(req, res) {
   try {
     const employee = await EmployeeService.createEmployee(req.body);
-    const data = await AuthService.registerUser({
-      name: req.body.EmplName,
-      email: req.body.Email,
-      password: req.body.Password,
-      role: "002",
-    });
     return successResponse(res, "Employee created successfully", employee);
   } catch (error) {
     console.log(error);

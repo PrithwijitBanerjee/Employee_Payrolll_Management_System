@@ -4,7 +4,7 @@ const Department = require("../Models/department");
 const Designation = require("../Models/Designation");
 const { getNextCode } = require("../utils/codeGenerator");
 const Employee = require("../Models/employee");
-const User = require("../Models/user");
+const Role = require("../Models/role");
 const { Op } = require("sequelize");
 
 async function createEmployee(data) {
@@ -18,6 +18,7 @@ async function createEmployee(data) {
     "Password",
     "EmplStatus",
     "Email",
+    "role"
   ];
 
   for (const field of requiredFields) {
@@ -54,6 +55,7 @@ async function getAllEmployees() {
       { model: ProjHelp, as: "status" },
       { model: Department, as: "department" },
       { model: Designation, as: "designation" },
+      { model: Role, as: "Role" },
     ],
   });
 }
@@ -65,6 +67,7 @@ async function getEmployeeById(emplCode) {
       { model: ProjHelp, as: "status" },
       { model: Department, as: "department" },
       { model: Designation, as: "designation" },
+      { model: Role, as: "Role" },
     ],
   });
   if (!employee) throw new Error("Employee not found");

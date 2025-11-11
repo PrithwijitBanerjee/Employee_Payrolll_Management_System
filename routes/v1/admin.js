@@ -14,9 +14,6 @@ router.get("/get-role/:id", roleController.getById);
 router.put("/update-role/:id", roleController.update);
 router.delete("/delete-role/:id", roleController.delete);
 
-const userController = require('../../controllers/user.controller');
-router.get("/get-user", userController.getAllUsers);
-
 const projHelpController = require('../../controllers/projHelp.controller');
 router.post('/create-projectHelp', projHelpController.createProjHelp);
 router.get('/getAll-projectHelp', projHelpController.getAllProjHelp);

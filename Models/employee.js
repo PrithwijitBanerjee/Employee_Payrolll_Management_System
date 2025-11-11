@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const ProjHelp = require("./projhelp");
 const Department = require("./department");
 const Designation = require("./Designation");
+const role = require("./role");
 
 const Employee = sequelize.define(
   "Employee",
@@ -14,10 +15,10 @@ const Employee = sequelize.define(
       primaryKey: true,
       unique: true,
     },
-    Email : {
-      type : DataTypes.STRING(100),
-      allowNull : false,
-      unique : true,
+    Email: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
     },
     EmplName: {
       type: DataTypes.STRING(100),
@@ -25,32 +26,38 @@ const Employee = sequelize.define(
     },
     EmplTag: {
       type: DataTypes.STRING(10),
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     EmplType: {
       type: DataTypes.CHAR(3),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: ProjHelp,
         key: "code",
       },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
     },
     DeptCode: {
       type: DataTypes.CHAR(3),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: Department,
         key: "DeptCode",
       },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
     },
     DesgCode: {
       type: DataTypes.CHAR(3),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: Designation,
         key: "DesgCode",
       },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
     },
     DOB: {
       type: DataTypes.DATEONLY,
@@ -60,22 +67,27 @@ const Employee = sequelize.define(
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-    UserID: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-      unique: true,
-    },
     Password: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    EmplStatus: {
+    role: {
       type: DataTypes.CHAR(3),
       allowNull: false,
+      references: {
+        model: role,
+        key: "code",
+      },
+    },
+    EmplStatus: {
+      type: DataTypes.CHAR(3),
+      allowNull: true,
       references: {
         model: ProjHelp,
         key: "code",
       },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
     },
   },
   {
@@ -106,6 +118,12 @@ Employee.belongsTo(Designation, {
   foreignKey: "DesgCode",
   targetKey: "DesgCode",
   as: "designation",
+});
+
+Employee.belongsTo(role, {
+  foreignKey: "role",
+  targetKey: "code",
+  as: "roleName",
 });
 
 Employee.beforeCreate(async (employee, options) => {
