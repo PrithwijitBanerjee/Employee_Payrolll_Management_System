@@ -24,7 +24,7 @@ const initAdmin = async (Employees) => {
       EmplCode: await getNextCode(Employee, "EmplCode", 5),
       EmplName: "Admin",
       Email: "admin@gmail.com",
-      Password: "12345",
+      Password: "123456",
       role: "001",
       DeptCode: null,
       DesgCode: null,
@@ -36,6 +36,8 @@ const initAdmin = async (Employees) => {
       where: { Email: defaultAdmin.Email },
       defaults: defaultAdmin,
     });
+    // console.log("created: ", created);
+    
 
     if (created) {
       console.log("✅ Default admin account created successfully.");
