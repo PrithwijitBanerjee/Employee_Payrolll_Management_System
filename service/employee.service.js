@@ -17,8 +17,7 @@ async function createEmployee(data) {
     "UserID",
     "Password",
     "EmplStatus",
-    "Email",
-    "role"
+    "Email"
   ];
 
   for (const field of requiredFields) {
@@ -28,6 +27,7 @@ async function createEmployee(data) {
   }
 
   data.EmplCode = await getNextCode(Employee, "EmplCode", 5);
+  data.role = "002";
 
   const existingTag = await Employee.findOne({
     where: { EmplTag: data.EmplTag },
