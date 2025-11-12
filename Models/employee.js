@@ -79,6 +79,11 @@ const Employee = sequelize.define(
         key: "code",
       },
     },
+    UserID: {
+      type: DataTypes.STRING(15),
+      allowNull: true,
+      unique: true,
+    },
     EmplStatus: {
       type: DataTypes.CHAR(3),
       allowNull: true,
