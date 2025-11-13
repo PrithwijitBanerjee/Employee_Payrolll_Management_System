@@ -71,4 +71,11 @@ router.get("/get-job/:JobNo", JobDetlController.getById);
 router.put("/update-job/:JobNo", JobDetlController.update);
 router.delete("/delete-job/:JobNo", JobDetlController.delete);
 
+const TaskController = require("../../controllers/taskController");
+router.post("/create-task", TaskController.createTask);
+router.get("/get-tasks", TaskController.getAllTasks);
+router.get("/get-task/:id", TaskController.getTaskById);
+router.put("/update-task/:id", TaskController.updateTask);
+router.delete("/delete-task/:id", TaskController.deleteTask);
+
 module.exports = router;
