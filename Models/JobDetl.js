@@ -3,6 +3,7 @@ const sequelize = require("../config/db");
 const ProjHelp = require("./projhelp");
 const JobMast = require("./JobMast");
 const Project = require("./Project")
+const Client = require("./client")
 
 const JobDetl = sequelize.define(
   "JobDetl",
@@ -24,6 +25,10 @@ const JobDetl = sequelize.define(
       type: DataTypes.STRING(6),
       primaryKey: true,
       allowNull: false,
+      references: {
+        model: Client,
+        key: "ClientCode",
+      },
     },
     ProjectCode: {
       type: DataTypes.STRING(6),
@@ -117,6 +122,12 @@ JobDetl.belongsTo(Project, {
   foreignKey: "ProjectCode",
   targetKey: "ProjectCode",
   as: "project",
+});
+
+JobDetl.belongsTo(Client, {
+  foreignKey: "ClientCode",
+  targetKey: "ClientCode",
+  as: "client",
 });
 
 module.exports = JobDetl;

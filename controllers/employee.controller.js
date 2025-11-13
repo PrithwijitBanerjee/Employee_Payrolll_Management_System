@@ -14,7 +14,7 @@ async function create(req, res) {
 
 async function getAll(req, res) {
   try {
-    const employees = await EmployeeService.getAllEmployees();
+    const employees = await EmployeeService.getAllEmployees(req.user.code);
     return successResponse(res, "Employees retrieved successfully", employees);
   } catch (error) {
     return errorResponse(res, 500, error.message);

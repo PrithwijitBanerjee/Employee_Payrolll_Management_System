@@ -48,14 +48,17 @@ async function createEmployee(data) {
   return employee;
 }
 
-async function getAllEmployees() {
+async function getAllEmployees(currentUserId) {
   return await Employee.findAll({
+    where: {
+      EmplCode: { [Op.ne]: currentUserId },
+    },
     include: [
       { model: ProjHelp, as: "type" },
       { model: ProjHelp, as: "status" },
       { model: Department, as: "department" },
       { model: Designation, as: "designation" },
-      { model: Role, as: "Role" },
+      { model: Role, as: "roleName" },
     ],
   });
 }
@@ -67,7 +70,7 @@ async function getEmployeeById(emplCode) {
       { model: ProjHelp, as: "status" },
       { model: Department, as: "department" },
       { model: Designation, as: "designation" },
-      { model: Role, as: "Role" },
+      { model: Role, as: "roleName" },
     ],
   });
   if (!employee) throw new Error("Employee not found");

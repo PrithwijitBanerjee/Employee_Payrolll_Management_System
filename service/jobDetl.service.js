@@ -67,7 +67,13 @@ const updateJobMasterTotals = async (JobMasterNo) => {
       acc.NetAmount += parseFloat(item.NetAmount || 0);
       return acc;
     },
-    { BasicAmount: 0, DiscAmount: 0, GrossAmount: 0, TaxAmount: 0, NetAmount: 0 }
+    {
+      BasicAmount: 0,
+      DiscAmount: 0,
+      GrossAmount: 0,
+      TaxAmount: 0,
+      NetAmount: 0,
+    }
   );
 
   await JobMast.update(totals, { where: { JobNo: JobMasterNo } });
@@ -109,55 +115,55 @@ const JobDetlService = {
   },
 
   async createJobs(dataArray, logData) {
-  if (!Array.isArray(dataArray) || dataArray.length === 0) {
-    throw new Error("Data must be a non-empty array");
-  }
-  
-  let { JobMasterNo } = dataArray[0];
+    if (!Array.isArray(dataArray) || dataArray.length === 0) {
+      throw new Error("Data must be a non-empty array");
+    }
 
-  // 🔹 If no JobMasterNo → create a new JobMast record
-  if (!JobMasterNo) {
-    const newJobMast = await JobMastService.createJob(
-      {
-        JobDate: new Date(),
-        JobTo: null,
-        JobStatus: dataArray[0].JobStatus,
-        BasicAmount: 0,
-        DiscAmount: 0,
-        GrossAmount: 0,
-        TaxAmount: 0,
-        NetAmount: 0,
-      },
-      logData
-    );
+    let { JobMasterNo } = dataArray[0];
 
-    JobMasterNo = newJobMast.JobNo;
-  }
+    // 🔹 If no JobMasterNo → create a new JobMast record
+    if (!JobMasterNo) {
+      const newJobMast = await JobMastService.createJob(
+        {
+          JobDate: new Date(),
+          JobTo: null,
+          JobStatus: dataArray[0].JobStatus,
+          BasicAmount: 0,
+          DiscAmount: 0,
+          GrossAmount: 0,
+          TaxAmount: 0,
+          NetAmount: 0,
+        },
+        logData
+      );
 
-  const jobDetlRecords = [];
+      JobMasterNo = newJobMast.JobNo;
+    }
 
-  // 🔹 Loop through each detail entry
-  for (const data of dataArray) {
-    const JobNo = await generateJobNo();
-    const calcData = await calculateAmounts(data);
+    const jobDetlRecords = [];
 
-    const jobDetl = await JobDetl.create({
-      ...calcData,
-      JobNo,
+    // 🔹 Loop through each detail entry
+    for (const data of dataArray) {
+      const JobNo = await generateJobNo();
+      const calcData = await calculateAmounts(data);
+
+      const jobDetl = await JobDetl.create({
+        ...calcData,
+        JobNo,
+        JobMasterNo,
+      });
+
+      jobDetlRecords.push(jobDetl);
+    }
+
+    // 🔹 Update totals after all JobDetl are added
+    await updateJobMasterTotals(JobMasterNo);
+
+    return {
       JobMasterNo,
-    });
-
-    jobDetlRecords.push(jobDetl);
-  }
-
-  // 🔹 Update totals after all JobDetl are added
-  await updateJobMasterTotals(JobMasterNo);
-
-  return {
-    JobMasterNo,
-    JobDetails: jobDetlRecords,
-  };
-},
+      JobDetails: jobDetlRecords,
+    };
+  },
 
   async updateJob(JobNo, data) {
     const calcData = await calculateAmounts(data);
@@ -177,6 +183,8 @@ const JobDetlService = {
         { association: "project" },
         { association: "status" },
         { association: "job" },
+        { association: "client" },
+        { association: "project" },
       ],
     });
   },
@@ -194,13 +202,21 @@ const JobDetlService = {
 
   async deleteJob(JobNo) {
     const job = await JobDetl.findOne({ where: { JobNo } });
+    if (!job) throw new Error("Job not found");
+
+    const { JobMasterNo } = job;
+
     const result = await JobDetl.destroy({ where: { JobNo } });
 
-    if (job?.JobMasterNo) {
-      await updateJobMasterTotals(job.JobMasterNo);
+    if (JobMasterNo) {
+      await updateJobMasterTotals(JobMasterNo);
     }
 
-    return result;
+    return {
+      message: "Job detail deleted successfully",
+      affectedRows: result,
+      JobMasterNo,
+    };
   },
 };
 

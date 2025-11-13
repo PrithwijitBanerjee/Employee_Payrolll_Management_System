@@ -34,7 +34,7 @@ exports.updateRole = async (id, roleName) => {
     const duplicate = await Role.findOne({
         where: {
             roleName,
-            id: { [Op.ne]: id }
+            code: { [Op.ne]: id }
         }
     });
     if (duplicate) throw { status: 400, message: "This role already exists!" };
