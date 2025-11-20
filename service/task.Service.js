@@ -36,6 +36,8 @@ const createTask = async (data, loggedUser) => {
     EndTime,
     Particulars,
     TaskStatus,
+    JobTo,
+    Remarks
   } = data;
 
   if (!JobNo) throw new Error("JobNo is required");
@@ -44,10 +46,11 @@ const createTask = async (data, loggedUser) => {
   if (!TaskStatus) throw new Error("TaskStatus is required");
 
   const job = await JobDetl.findByPk(JobNo, {
-    include: ["client", "project"],
+    include: ["job", "project"],
   });
+  
   if (!job) throw new Error("Invalid JobNo");
-
+  
   const employee = await Employee.findByPk(loggedUser.code);
   if (!employee) throw new Error("Invalid employee user");
 
@@ -62,15 +65,17 @@ const createTask = async (data, loggedUser) => {
   const newTask = await TaskMast.create({
     TaskId,
     TaskDate: new Date(),
-    EmplCode: loggedUser.code,
+    JobFrom: loggedUser.code,
+    JobTo,
     JobNo,
-    ClientCode: job.ClientCode,
+    ClientCode: job.job.ClientCode,
     ProjectCode: job.ProjectCode,
     Particulars,
     StartTime,
     EndTime,
     DurationMin,
     TaskStatus,
+    Remarks
   });
 
   return newTask;

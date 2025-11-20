@@ -25,15 +25,20 @@ const TaskMast = sequelize.define(
         isDate: true,
       },
     },
-    EmplCode: {
+    JobFrom: {
       type: DataTypes.STRING(5),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: Employee,
         key: "EmplCode",
       },
-      validate: {
-        notEmpty: true,
+    },
+    JobTo: {
+      type: DataTypes.STRING(5),
+      allowNull: true,
+      references: {
+        model: Employee,
+        key: "EmplCode",
       },
     },
     JobNo: {
@@ -58,6 +63,13 @@ const TaskMast = sequelize.define(
       },
     },
     Particulars: {
+      type: DataTypes.STRING(5000),
+      allowNull: true,
+      validate: {
+        len: [0, 5000],
+      },
+    },
+    Remarks: {
       type: DataTypes.STRING(5000),
       allowNull: true,
       validate: {
@@ -142,6 +154,18 @@ TaskMast.belongsTo(Project, {
   targetKey: "ProjectCode",
   as: "project",
   constraints: false,
+});
+
+TaskMast.belongsTo(Employee, {
+  foreignKey: "JobFrom",
+  targetKey: "EmplCode",
+  as: "fromUser",
+});
+
+TaskMast.belongsTo(Employee, {
+  foreignKey: "JobTo",
+  targetKey: "EmplCode",
+  as: "toUser",
 });
 
 module.exports = TaskMast;

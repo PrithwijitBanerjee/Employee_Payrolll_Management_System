@@ -49,8 +49,8 @@ exports.createJob = async (data, logData) => {
   const job = await JobMast.create({
     JobNo: jobNo,
     JobDate: data.JobDate || new Date(),
-    JobFrom: fromData.EmplCode || "",
-    JobTo: data.JobTo || null,
+    // JobFrom: fromData.EmplCode || "",
+    // JobTo: data.JobTo || null,
     BasicAmount: basic,
     DiscAmount: discount,
     GrossAmount: gross,

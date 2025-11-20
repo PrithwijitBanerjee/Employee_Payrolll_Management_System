@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const Employee = require("./employee");
 const ProjHelp = require("./projhelp");
+const Client = require("./client");
 
 const JobMast = sequelize.define(
   "JobMast",
@@ -16,22 +17,12 @@ const JobMast = sequelize.define(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    JobFrom: {
-      type: DataTypes.STRING(5),
+    ClientCode: {
+      type: DataTypes.STRING(6),
       allowNull: true,
       references: {
-        model: "employee",
-        key: "EmplCode",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
-    },
-    JobTo: {
-      type: DataTypes.STRING(5),
-      allowNull: true,
-      references: {
-        model: Employee,
-        key: "EmplCode",
+        model: Client,
+        key: "ClientCode",
       },
       onDelete: "SET NULL",
       onUpdate: "CASCADE",
@@ -87,6 +78,12 @@ JobMast.belongsTo(ProjHelp, {
   foreignKey: "JobStatus",
   targetKey: "code",
   as: "status",
+});
+
+JobMast.belongsTo(Client, {
+  foreignKey: "ClientCode",
+  targetKey: "ClientCode",
+  as: "client",
 });
 
 module.exports = JobMast;

@@ -128,7 +128,6 @@ const JobDetlService = {
       const newJobMast = await JobMastService.createJob(
         {
           JobDate: new Date(),
-          JobTo: null,
           JobStatus: dataArray[0].JobStatus,
           BasicAmount: 0,
           DiscAmount: 0,
