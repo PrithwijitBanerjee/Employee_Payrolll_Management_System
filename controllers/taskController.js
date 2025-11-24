@@ -45,3 +45,37 @@ exports.deleteTask = async (req, res) => {
     res.status(404).json({ success: false, message: error.message });
   }
 };
+
+exports.getMyJobFromTasks = async (req, res) => {
+  try {
+    const userId = req.user.code;
+
+    const tasks = await taskService.getTasksByJobFrom(userId);
+
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      data: tasks
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+exports.getMyJobToTasks = async (req, res) => {
+  try {
+    const userId = req.user.code;
+
+    const tasks = await taskService.getTasksByJobTo(userId);
+
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      data: tasks
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

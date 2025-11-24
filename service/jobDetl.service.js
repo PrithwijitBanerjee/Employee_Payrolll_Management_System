@@ -184,7 +184,6 @@ const JobDetlService = {
         { association: "project" },
         { association: "status" },
         { association: "job" },
-        { association: "client" },
         { association: "project" },
       ],
     });

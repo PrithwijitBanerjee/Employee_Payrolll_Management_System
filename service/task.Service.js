@@ -120,10 +120,34 @@ const deleteTask = async (TaskId) => {
   return { message: "Task deleted successfully" };
 };
 
+const getTasksByJobFrom = async (userId) => {
+  return TaskMast.findAll({
+    where: { JobFrom: userId },
+    include: [
+      { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
+      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] }
+    ],
+    order: [["TaskDate", "DESC"]],
+  });
+};
+
+const getTasksByJobTo = async (userId) => {
+  return TaskMast.findAll({
+    where: { JobTo: userId },
+    include: [
+      { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
+      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] }
+    ],
+    order: [["TaskDate", "DESC"]],
+  });
+};
+
 module.exports = {
   createTask,
   getAllTasks,
   getTaskById,
   updateTask,
   deleteTask,
+  getTasksByJobFrom,
+  getTasksByJobTo
 };
