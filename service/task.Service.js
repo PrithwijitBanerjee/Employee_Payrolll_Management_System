@@ -35,22 +35,21 @@ const createTask = async (data, loggedUser) => {
     StartTime,
     EndTime,
     Particulars,
-    TaskStatus,
+    TaskStatus = "003",
     JobTo,
-    Remarks
   } = data;
 
   if (!JobNo) throw new Error("JobNo is required");
   // if (!StartTime) throw new Error("StartTime is required");
   // if (!EndTime) throw new Error("EndTime is required");
-  if (!TaskStatus) throw new Error("TaskStatus is required");
+  // if (!TaskStatus) throw new Error("TaskStatus is required");
 
   const job = await JobDetl.findByPk(JobNo, {
     include: ["job", "project"],
   });
-  
+
   if (!job) throw new Error("Invalid JobNo");
-  
+
   const employee = await Employee.findByPk(loggedUser.code);
   if (!employee) throw new Error("Invalid employee user");
 
@@ -61,7 +60,7 @@ const createTask = async (data, loggedUser) => {
 
   // const DurationMin = calculateDuration(StartTime, EndTime);
   const TaskId = await generateTaskId();
-  
+
   const newTask = await TaskMast.create({
     TaskId,
     TaskDate: new Date(),
@@ -75,7 +74,7 @@ const createTask = async (data, loggedUser) => {
     // EndTime,
     // DurationMin,
     TaskStatus,
-    Remarks
+    Remarks: "",
   });
 
   return newTask;
@@ -106,8 +105,40 @@ const updateTask = async (TaskId, data) => {
   const task = await TaskMast.findByPk(TaskId);
   if (!task) throw new Error("Task not found");
 
+  const protectedFields = [
+    "TaskDate",
+    "JobFrom",
+    "JobTo",
+    "JobNo",
+    "ClientCode",
+    "ProjectCode",
+    "Particulars",
+  ];
+
+  protectedFields.forEach((field) => delete data[field]);
+
   if (data.StartTime && data.EndTime)
     data.DurationMin = calculateDuration(data.StartTime, data.EndTime);
+
+  await task.update(data);
+  return task;
+};
+
+const updateOwnTask = async (TaskId, data) => {
+  const task = await TaskMast.findByPk(TaskId);
+  if (!task) throw new Error("Task not found");
+
+  const protectedFields = ["DurationMin", "StartTime", "EndTime"];
+
+  protectedFields.forEach((field) => delete data[field]);
+
+  if (data.JobTo) {
+    data.DurationMin = null,
+    data.StartTime = null,
+    data.EndTime = null,
+    data.Remarks = "",
+    data.TaskStatus = "003"
+  }
 
   await task.update(data);
   return task;
@@ -122,10 +153,10 @@ const deleteTask = async (TaskId) => {
 
 const getTasksByJobFrom = async (userId) => {
   return TaskMast.findAll({
-    where: { JobFrom: userId },
+    where: { JobFrom: userId, TaskStatus : "005" },
     include: [
       { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
-      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] }
+      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] },
     ],
     order: [["TaskDate", "DESC"]],
   });
@@ -133,10 +164,10 @@ const getTasksByJobFrom = async (userId) => {
 
 const getTasksByJobTo = async (userId) => {
   return TaskMast.findAll({
-    where: { JobTo: userId },
+    where: { JobTo: userId, TaskStatus: { [Op.ne]: "005" } },
     include: [
       { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
-      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] }
+      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] },
     ],
     order: [["TaskDate", "DESC"]],
   });
@@ -149,5 +180,6 @@ module.exports = {
   updateTask,
   deleteTask,
   getTasksByJobFrom,
-  getTasksByJobTo
+  getTasksByJobTo,
+  updateOwnTask,
 };

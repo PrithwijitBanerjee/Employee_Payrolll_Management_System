@@ -14,7 +14,8 @@ var usersRouter = require('./routes/users');
 
 const Role = require('./Models/role');
 const Employee = require("./Models/employee");
-const { initRoles, initAdmin } = require('./Seeders/initDefaultData');
+const Status = require("./Models/projhelp");
+const { initRoles, initAdmin, initStatus } = require('./Seeders/initDefaultData');
 
 var app = express()
 
@@ -27,6 +28,7 @@ const sequelize = require('./config/db');
     await sequelize.sync({ alter: true });
     await initRoles(Role);
     await initAdmin(Employee);
+    await initStatus(Status);
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

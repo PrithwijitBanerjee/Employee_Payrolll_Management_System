@@ -37,6 +37,15 @@ exports.updateTask = async (req, res) => {
   }
 };
 
+exports.updateOwnTask = async (req, res) => {
+  try {
+    const task = await taskService.updateOwnTask(req.params.id, req.body);
+    res.json({ success: true, data: task });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 exports.deleteTask = async (req, res) => {
   try {
     const result = await taskService.deleteTask(req.params.id);

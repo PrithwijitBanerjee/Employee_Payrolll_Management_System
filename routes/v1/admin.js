@@ -76,6 +76,7 @@ router.post("/create-task", TaskController.createTask);
 router.get("/get-tasks", TaskController.getAllTasks);
 router.get("/get-task/:id", TaskController.getTaskById);
 router.put("/update-task/:id", TaskController.updateTask);
+router.put("/manage-task/:id", TaskController.updateOwnTask);
 router.delete("/delete-task/:id", TaskController.deleteTask);
 router.get("/tasks/job-from", TaskController.getMyJobFromTasks);
 router.get("/tasks/job-to", TaskController.getMyJobToTasks);
