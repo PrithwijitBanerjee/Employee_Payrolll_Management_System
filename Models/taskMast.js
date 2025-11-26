@@ -78,14 +78,14 @@ const TaskMast = sequelize.define(
     },
     StartTime: {
       type: DataTypes.TIME,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       },
     },
     EndTime: {
       type: DataTypes.TIME,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       },

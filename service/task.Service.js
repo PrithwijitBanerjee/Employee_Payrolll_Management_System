@@ -41,8 +41,8 @@ const createTask = async (data, loggedUser) => {
   } = data;
 
   if (!JobNo) throw new Error("JobNo is required");
-  if (!StartTime) throw new Error("StartTime is required");
-  if (!EndTime) throw new Error("EndTime is required");
+  // if (!StartTime) throw new Error("StartTime is required");
+  // if (!EndTime) throw new Error("EndTime is required");
   if (!TaskStatus) throw new Error("TaskStatus is required");
 
   const job = await JobDetl.findByPk(JobNo, {
@@ -59,7 +59,7 @@ const createTask = async (data, loggedUser) => {
   });
   if (!status) throw new Error("Invalid TaskStatus (not under tag '02')");
 
-  const DurationMin = calculateDuration(StartTime, EndTime);
+  // const DurationMin = calculateDuration(StartTime, EndTime);
   const TaskId = await generateTaskId();
   
   const newTask = await TaskMast.create({
@@ -71,9 +71,9 @@ const createTask = async (data, loggedUser) => {
     ClientCode: job.job.ClientCode,
     ProjectCode: job.ProjectCode,
     Particulars,
-    StartTime,
-    EndTime,
-    DurationMin,
+    // StartTime,
+    // EndTime,
+    // DurationMin,
     TaskStatus,
     Remarks
   });
