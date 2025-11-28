@@ -81,4 +81,8 @@ router.delete("/delete-task/:id", TaskController.deleteTask);
 router.get("/tasks/job-from", TaskController.getMyJobFromTasks);
 router.get("/tasks/job-to", TaskController.getMyJobToTasks);
 
+const ReportController = require("../../controllers/reportController");
+router.get("/mis/me", ReportController.misForMe);
+router.get("/mis/others", ReportController.misForOthers);
+
 module.exports = router;
