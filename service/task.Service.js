@@ -133,11 +133,11 @@ const updateOwnTask = async (TaskId, data) => {
   protectedFields.forEach((field) => delete data[field]);
 
   if (data.JobTo) {
-    data.DurationMin = null,
-    data.StartTime = null,
-    data.EndTime = null,
-    data.Remarks = "",
-    data.TaskStatus = "003"
+    (data.DurationMin = null),
+      (data.StartTime = null),
+      (data.EndTime = null),
+      (data.Remarks = ""),
+      (data.TaskStatus = "003");
   }
 
   await task.update(data);
@@ -153,10 +153,13 @@ const deleteTask = async (TaskId) => {
 
 const getTasksByJobFrom = async (userId) => {
   return TaskMast.findAll({
-    where: { JobFrom: userId, TaskStatus : "005" },
+    where: { JobFrom: userId, TaskStatus: "005" },
     include: [
-      { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
-      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] },
+      { model: JobDetl, as: "job" },
+      { model: Client, as: "client" },
+      { model: Project, as: "project" },
+      { model: Employee, as: "employee" },
+      { model: ProjHelp, as: "status" },
     ],
     order: [["TaskDate", "DESC"]],
   });
@@ -166,8 +169,11 @@ const getTasksByJobTo = async (userId) => {
   return TaskMast.findAll({
     where: { JobTo: userId, TaskStatus: { [Op.ne]: "005" } },
     include: [
-      { model: Employee, as: "fromUser", attributes: ["EmplCode", "EmplName"] },
-      { model: Employee, as: "toUser", attributes: ["EmplCode", "EmplName"] },
+      { model: JobDetl, as: "job" },
+      { model: Client, as: "client" },
+      { model: Project, as: "project" },
+      { model: Employee, as: "employee" },
+      { model: ProjHelp, as: "status" },
     ],
     order: [["TaskDate", "DESC"]],
   });

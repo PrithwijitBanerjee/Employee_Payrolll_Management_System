@@ -183,8 +183,7 @@ const JobDetlService = {
       include: [
         { association: "project" },
         { association: "status" },
-        { association: "job" },
-        { association: "project" },
+        { association: "job", include: [{ association: "client" }] },
       ],
     });
   },
